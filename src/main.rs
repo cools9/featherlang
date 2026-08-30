@@ -1,13 +1,17 @@
 mod lexer;
-
 use crate::lexer::lexer::Lexer;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
 
-fn main() {
-    let mut lexer = Lexer {
-        line: String::from("let x = 42"),
-    };
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let file = File::open("main.fl")?;
+    let reader = BufReader::new(file);
 
-    let words = lexer.stripper();
-
-    println!("{:?}", words);
+    for line in reader.lines() {
+        let line = line?;
+        let mut lexer = Lexer { line: line };
+        let words = lexer.stripper();
+        println!("{:?}", words);
+    }
+    Ok(())
 }
