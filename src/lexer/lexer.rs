@@ -68,14 +68,56 @@ impl Lexer {
             '*' => self.addToken(TokenTypes::STAR),
             '.' => self.addToken(TokenTypes::DOT),
             ';' => self.addToken(TokenTypes::SEMICOLON),
+            '=' => {
+                if (self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::EQUAL_EQUAL);
+                } else if !(self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::EQUAL);
+                } else {
+                    todo!();
+                }
+            }
+            '>' => {
+                if (self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::LESS_EQUAL);
+                } else if !(self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::LESS);
+                } else {
+                    todo!();
+                }
+            }
+            '<' => {
+                if (self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::GREATER_EQUAL);
+                } else if !(self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::GREATER);
+                } else {
+                    todo!();
+                }
+            }
+            '!' => {
+                if (self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::BANG_EQUAL);
+                } else if !(self.source[self.current_position + 1] == '=') {
+                    self.addToken(TokenTypes::BANG);
+                } else {
+                    todo!();
+                }
+            }
+
             _ => todo!(),
         }
-        self.advance();
     }
     pub fn addToken(&mut self, tokentype: TokenTypes) {
         self.tokens.push(tokentype);
     }
     pub fn advance(&mut self) {
-        self.current_position += 1;
+        if !self.is_at_end() {
+            self.current_position += 1;
+        }
+    }
+
+    fn is_at_end(&self) -> bool {
+        self.current_position >= self.source.len()
     }
 }
