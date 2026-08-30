@@ -1,0 +1,1 @@
+/home/cools9/Projects/featherlang/target/release/featherlang: /home/cools9/Projects/featherlang/src/lexer/lexer.rs /home/cools9/Projects/featherlang/src/lexer/mod.rs /home/cools9/Projects/featherlang/src/main.rs
