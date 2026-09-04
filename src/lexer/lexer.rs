@@ -63,63 +63,110 @@ impl Lexer {
         }
     }
 
-    pub fn DetermineToken(&mut self) {
-        let character: char = self.source[self.current_position];
-        match character {
-            '{' => self.addToken(TokenTypes::LEFT_BRACE),
-            '}' => self.addToken(TokenTypes::RIGHT_BRACE),
-            '(' => self.addToken(TokenTypes::LEFT_PAREN),
-            ')' => self.addToken(TokenTypes::RIGHT_PAREN),
-            '+' => self.addToken(TokenTypes::PLUS),
-            '-' => self.addToken(TokenTypes::MINUS),
-            '*' => self.addToken(TokenTypes::STAR),
-            '.' => self.addToken(TokenTypes::DOT),
-            ';' => self.addToken(TokenTypes::SEMICOLON),
-            '=' => {
-                if (self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::EQUAL_EQUAL);
-                } else if !(self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::EQUAL);
-                } else {
-                    todo!();
-                }
-            }
-            '<' => {
-                if (self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::LESS_EQUAL);
-                } else if !(self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::LESS);
-                } else {
-                    todo!();
-                }
-            }
-            '>' => {
-                if (self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::GREATER_EQUAL);
-                } else if !(self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::GREATER);
-                } else {
-                    todo!();
-                }
-            }
-            '!' => {
-                if (self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::BANG_EQUAL);
-                } else if !(self.source[self.current_position + 1] == '=') {
-                    self.addToken(TokenTypes::BANG);
-                } else {
-                    todo!();
-                }
-            }
+    pub fn determine_token(&mut self) {
+        while !self.is_at_end() {
+            self.start = self.current_position;
 
-            _ if self.is_number(character) => self.number(),
-            ' ' | '\r' | '\t' | '\n' => {}
-            _ if self.is_alpha(character) => self.identifier(),
+            let character = self.source[self.current_position];
 
-            _ => todo!("tf am i doing vro"),
+            match character {
+                '{' => {
+                    self.add_token(TokenTypes::LEFT_BRACE);
+                    self.advance();
+                }
+                '}' => {
+                    self.add_token(TokenTypes::RIGHT_BRACE);
+                    self.advance();
+                }
+                '(' => {
+                    self.add_token(TokenTypes::LEFT_PAREN);
+                    self.advance();
+                }
+                ')' => {
+                    self.add_token(TokenTypes::RIGHT_PAREN);
+                    self.advance();
+                }
+                '+' => {
+                    self.add_token(TokenTypes::PLUS);
+                    self.advance();
+                }
+                '-' => {
+                    self.add_token(TokenTypes::MINUS);
+                    self.advance();
+                }
+                '*' => {
+                    self.add_token(TokenTypes::STAR);
+                    self.advance();
+                }
+                '.' => {
+                    self.add_token(TokenTypes::DOT);
+                    self.advance();
+                }
+                ';' => {
+                    self.add_token(TokenTypes::SEMICOLON);
+                    self.advance();
+                }
+
+                '=' => {
+                    self.advance();
+                    if self.peek() == '=' {
+                        self.advance();
+                        self.add_token(TokenTypes::EQUAL_EQUAL);
+                    } else {
+                        self.add_token(TokenTypes::EQUAL);
+                    }
+                }
+
+                '<' => {
+                    self.advance();
+                    if self.peek() == '=' {
+                        self.advance();
+                        self.add_token(TokenTypes::LESS_EQUAL);
+                    } else {
+                        self.add_token(TokenTypes::LESS);
+                    }
+                }
+
+                '>' => {
+                    self.advance();
+                    if self.peek() == '=' {
+                        self.advance();
+                        self.add_token(TokenTypes::GREATER_EQUAL);
+                    } else {
+                        self.add_token(TokenTypes::GREATER);
+                    }
+                }
+
+                '!' => {
+                    self.advance();
+                    if self.peek() == '=' {
+                        self.advance();
+                        self.add_token(TokenTypes::BANG_EQUAL);
+                    } else {
+                        self.add_token(TokenTypes::BANG);
+                    }
+                }
+
+                ' ' | '\r' | '\t' | '\n' => {
+                    self.advance();
+                }
+
+                _ if self.is_number(character) => {
+                    self.number();
+                }
+
+                _ if self.is_alpha(character) => {
+                    self.identifier();
+                }
+
+                _ => {
+                    panic!("Unexpected character: {}", character);
+                }
+            }
         }
     }
-    pub fn addToken(&mut self, tokentype: TokenTypes) {
+
+    pub fn add_token(&mut self, tokentype: TokenTypes) {
         self.tokens.push(tokentype);
     }
     fn advance(&mut self) {
@@ -145,7 +192,7 @@ impl Lexer {
             }
         }
 
-        self.addToken(TokenTypes::NUMBER);
+        self.add_token(TokenTypes::NUMBER);
     }
 
     fn is_number(&self, character: char) -> bool {
@@ -197,7 +244,7 @@ impl Lexer {
             _ => TokenTypes::IDENTIFIER,
         };
 
-        self.addToken(token);
+        self.add_token(token);
     }
     fn is_alpha(&self, c: char) -> bool {
         c.is_ascii_alphabetic() || c == '_'

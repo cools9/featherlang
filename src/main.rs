@@ -24,7 +24,7 @@ fn RunProgram(path: String) -> Result<(), Box<dyn std::error::Error>> {
     for line in reader.lines() {
         let line = line?;
         let mut lexer = Lexer::new(line.chars().collect());
-        lexer.DetermineToken();
+        lexer.determine_token();
         println!("{:?}", lexer.return_tokens());
     }
     Ok(())
