@@ -158,7 +158,9 @@ impl Lexer {
                 _ if self.is_alpha(character) => {
                     self.identifier();
                 }
-
+                '"' => {
+                    self.string();
+                }
                 _ => {
                     panic!("Unexpected character: {}", character);
                 }
@@ -255,5 +257,19 @@ impl Lexer {
     }
     pub fn return_tokens(&self) -> Vec<TokenTypes> {
         return self.tokens.clone();
+    }
+
+    fn string(&mut self) {
+        while self.peek() != '"' && !self.is_at_end() {
+            self.advance();
+        }
+
+        if self.is_at_end() {
+            panic!("Unterminated string.");
+        }
+
+        self.advance();
+
+        self.add_token(TokenTypes::STRING);
     }
 }
