@@ -101,58 +101,6 @@ impl Lexer {
                     todo!();
                 }
             }
-            'a' => {
-                if (self.peek_next() == 'n' && self.source[self.current_position + 2] == 'd') {
-                    self.addToken(TokenTypes::AND);
-                } else {
-                    todo!();
-                }
-            }
-
-            'o' => {
-                if (self.peek_next() == 'r' && self.source[self.current_position + 2] == 'd') {
-                    self.addToken(TokenTypes::OR);
-                } else {
-                    todo!();
-                }
-            }
-
-            'l' => {
-                if (self.peek_next() == 'e' && self.source[self.current_position + 2] == 't') {
-                    self.addToken(TokenTypes::LET);
-                } else {
-                    todo!();
-                }
-            }
-            'i' => {
-                if (self.peek_next() == 'f') {
-                    self.addToken(TokenTypes::IF);
-                } else {
-                    todo!();
-                }
-            }
-
-            'e' => {
-                if (self.peek_next() == 'l'
-                    && self.source[self.current_position + 2] == 's'
-                    && self.source[self.current_position + 3] == 'e')
-                {
-                    self.addToken(TokenTypes::ELSE);
-                } else {
-                    todo!();
-                }
-            }
-
-            't' => {
-                if (self.peek_next() == 'r'
-                    && self.source[self.current_position + 2] == 'u'
-                    && self.source[self.current_position + 3] == 'e')
-                {
-                    self.addToken(TokenTypes::TRUE);
-                } else {
-                    todo!();
-                }
-            }
 
             _ if self.is_number(character) => self.number(),
             ' ' | '\r' | '\t' | '\n' => {}
