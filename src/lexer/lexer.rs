@@ -1,12 +1,13 @@
+#[derive(Clone)]
 pub struct Lexer {
     pub source: Vec<char>,
-
-    pub tokens: Vec<TokenTypes>,
+    start: usize,
+    tokens: Vec<TokenTypes>,
     current_position: usize,
-    maybe_position: usize,
 }
 
-enum TokenTypes {
+#[derive(Clone, Debug)]
+pub enum TokenTypes {
     LEFT_PAREN,
     RIGHT_PAREN,
     LEFT_BRACE,
@@ -53,6 +54,15 @@ enum TokenTypes {
 }
 
 impl Lexer {
+    pub fn new(source: Vec<char>) -> Self {
+        Self {
+            source,
+            start: 0,
+            tokens: Vec::new(),
+            current_position: 0,
+        }
+    }
+
     pub fn DetermineToken(&mut self) {
         let character: char = self.source[self.current_position];
         match character {
@@ -104,6 +114,7 @@ impl Lexer {
 
             _ if self.is_number(character) => self.number(),
             ' ' | '\r' | '\t' | '\n' => {}
+            _ if self.is_alpha(character) => self.identifier(),
 
             _ => todo!("tf am i doing vro"),
         }
@@ -159,5 +170,43 @@ impl Lexer {
         } else {
             self.source[self.current_position + 1]
         }
+    }
+    fn identifier(&mut self) {
+        while self.is_alpha_numeric(self.peek()) {
+            self.advance();
+        }
+
+        let text: String = self.source[self.start..self.current_position]
+            .iter()
+            .collect();
+
+        let token = match text.as_str() {
+            "and" => TokenTypes::AND,
+            "or" => TokenTypes::OR,
+            "not" => TokenTypes::NOT,
+            "else" => TokenTypes::ELSE,
+            "false" => TokenTypes::FALSE,
+            "fn" => TokenTypes::FN,
+            "for" => TokenTypes::FOR,
+            "if" => TokenTypes::IF,
+            "print" => TokenTypes::PRINT,
+            "return" => TokenTypes::RETURN,
+            "true" => TokenTypes::TRUE,
+            "let" => TokenTypes::LET,
+            "while" => TokenTypes::WHILE,
+            _ => TokenTypes::IDENTIFIER,
+        };
+
+        self.addToken(token);
+    }
+    fn is_alpha(&self, c: char) -> bool {
+        c.is_ascii_alphabetic() || c == '_'
+    }
+
+    fn is_alpha_numeric(&self, c: char) -> bool {
+        self.is_alpha(c) || c.is_ascii_digit()
+    }
+    pub fn return_tokens(&self) -> Vec<TokenTypes> {
+        return self.tokens.clone();
     }
 }

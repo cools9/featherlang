@@ -1,2 +1,1 @@
-number int = 5
-number1 float = 10.1
+let name = "SIGMESH";
