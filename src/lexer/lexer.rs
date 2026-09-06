@@ -31,9 +31,9 @@ pub enum TokenTypes {
     LESS_EQUAL,
 
     // Literals.
-    IDENTIFIER,
-    STRING,
-    NUMBER,
+    IDENTIFIER(String),
+    STRING(String),
+    NUMBER(f64),
 
     // Keywords.
     AND,
@@ -182,19 +182,23 @@ impl Lexer {
     }
 
     fn number(&mut self) {
+        let mut number = String::new();
         while self.is_number(self.peek()) {
+            number.push(self.peek());
             self.advance();
         }
 
         if self.peek() == '.' && self.is_number(self.peek_next()) {
             self.advance();
+            number.push('.');
 
             while self.is_number(self.peek()) {
+                number.push(self.peek());
                 self.advance();
             }
         }
 
-        self.add_token(TokenTypes::NUMBER);
+        self.add_token(TokenTypes::NUMBER(number.parse().unwrap()));
     }
 
     fn is_number(&self, character: char) -> bool {
@@ -243,7 +247,7 @@ impl Lexer {
             "true" => TokenTypes::TRUE,
             "let" => TokenTypes::LET,
             "while" => TokenTypes::WHILE,
-            _ => TokenTypes::IDENTIFIER,
+            _ => TokenTypes::IDENTIFIER(text),
         };
 
         self.add_token(token);
@@ -260,8 +264,13 @@ impl Lexer {
     }
 
     fn string(&mut self) {
+        let mut text = String::new();
+        self.advance();
         while self.peek() != '"' && !self.is_at_end() {
+
+            text.push(self.peek());
             self.advance();
+
         }
 
         if self.is_at_end() {
@@ -270,6 +279,6 @@ impl Lexer {
 
         self.advance();
 
-        self.add_token(TokenTypes::STRING);
+        self.add_token(TokenTypes::STRING(text));
     }
 }

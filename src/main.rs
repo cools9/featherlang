@@ -1,5 +1,7 @@
 mod lexer;
+mod ast;
 use crate::lexer::lexer::Lexer;
+use crate::ast::*;
 use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
