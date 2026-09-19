@@ -1,37 +1,35 @@
-enum ast{
-    BinaryExpressions{
-        left: Box<ast>,
-        right: Box<ast>,
+enum Ast {
+    BinaryExpressions {
+        left: Box<Ast>,
+        right: Box<Ast>,
         operator: Operator,
     },
 
-    UnaryExpression{
+    UnaryExpression {
         operator: Operator,
-        operand: Box<ast>,
+        operand: Box<Ast>,
     },
 
-    Let{
+    Let {
         name: String,
-        value: Box<ast>,
+        value: Box<Ast>,
     },
 
-    Print{
-        value: Box<ast>,
+    Print {
+        value: Box<Ast>,
     },
 
-    Number{
+    Number {
         value: f64,
     },
 
-    String{
+    String {
         value: String,
     },
 
-    Bool{
+    Bool {
         value: bool,
     },
-
-
 }
 
 #[derive(Debug)]
@@ -42,36 +40,38 @@ enum Operator {
     Divide,
 }
 
-
-impl ast{
+impl Ast {
     pub fn print(&self) {
         match self {
-            ast::BinaryExpressions { left, right, operator } => {
+            Ast::BinaryExpressions {
+                left,
+                right,
+                operator,
+            } => {
                 left.print();
                 right.print();
                 println!("Operator: {:?}", operator);
             }
-            ast::UnaryExpression { operator, operand } => {
+            Ast::UnaryExpression { operator, operand } => {
                 operand.print();
                 println!("Operator: {:?}", operator);
             }
-            ast::Let { name, value } => {
+            Ast::Let { name, value } => {
                 println!("Name: {}", name);
                 value.print();
             }
-            ast::Print { value } => {
+            Ast::Print { value } => {
                 value.print();
             }
-            ast::Number { value } => {
+            Ast::Number { value } => {
                 println!("Number: {}", value);
             }
-            ast::String { value } => {
+            Ast::String { value } => {
                 println!("String: {}", value);
             }
-            ast::Bool { value } => {
+            Ast::Bool { value } => {
                 println!("Bool: {}", value);
             }
         }
     }
-
 }

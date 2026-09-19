@@ -1,20 +1,22 @@
-mod lexer;
 mod ast;
+mod lexer;
+mod parser;
+//use crate::ast::*;
 use crate::lexer::lexer::Lexer;
-use crate::ast::*;
+//use crate::parser::Parser;
 use clap::Parser;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
-struct Args {
+struct Arguements {
     #[arg(short, long)]
     filename: String,
 }
 
 fn main() {
-    let args = Args::parse();
+    let args = Arguements::parse();
     //println!("Hello {}!", args.name);
     RunProgram(args.filename);
 }

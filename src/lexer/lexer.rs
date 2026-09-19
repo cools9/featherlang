@@ -6,29 +6,29 @@ pub struct Lexer {
     current_position: usize,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub enum TokenTypes {
-    LEFT_PAREN,
-    RIGHT_PAREN,
-    LEFT_BRACE,
-    RIGHT_BRACE,
+    LeftParen,
+    RightParen,
+    LeftBrace,
+    RightBrace,
     COMMA,
-    DOT,
-    MINUS,
-    PLUS,
-    SEMICOLON,
+    Dot,
+    Minus,
+    Plus,
+    Semicolon,
     SLASH,
-    STAR,
+    Star,
 
     // One or two character tokens.
-    BANG,
-    BANG_EQUAL,
-    EQUAL,
-    EQUAL_EQUAL,
-    GREATER,
-    GREATER_EQUAL,
-    LESS,
-    LESS_EQUAL,
+    Bang,
+    BangEqual,
+    Equal,
+    EqualEqual,
+    Greater,
+    GreaterEqual,
+    Less,
+    LessEqual,
 
     // Literals.
     IDENTIFIER(String),
@@ -71,39 +71,39 @@ impl Lexer {
 
             match character {
                 '{' => {
-                    self.add_token(TokenTypes::LEFT_BRACE);
+                    self.add_token(TokenTypes::LeftBrace);
                     self.advance();
                 }
                 '}' => {
-                    self.add_token(TokenTypes::RIGHT_BRACE);
+                    self.add_token(TokenTypes::RightBrace);
                     self.advance();
                 }
                 '(' => {
-                    self.add_token(TokenTypes::LEFT_PAREN);
+                    self.add_token(TokenTypes::LeftParen);
                     self.advance();
                 }
                 ')' => {
-                    self.add_token(TokenTypes::RIGHT_PAREN);
+                    self.add_token(TokenTypes::RightParen);
                     self.advance();
                 }
                 '+' => {
-                    self.add_token(TokenTypes::PLUS);
+                    self.add_token(TokenTypes::Plus);
                     self.advance();
                 }
                 '-' => {
-                    self.add_token(TokenTypes::MINUS);
+                    self.add_token(TokenTypes::Minus);
                     self.advance();
                 }
                 '*' => {
-                    self.add_token(TokenTypes::STAR);
+                    self.add_token(TokenTypes::Star);
                     self.advance();
                 }
                 '.' => {
-                    self.add_token(TokenTypes::DOT);
+                    self.add_token(TokenTypes::Dot);
                     self.advance();
                 }
                 ';' => {
-                    self.add_token(TokenTypes::SEMICOLON);
+                    self.add_token(TokenTypes::Semicolon);
                     self.advance();
                 }
 
@@ -111,9 +111,9 @@ impl Lexer {
                     self.advance();
                     if self.peek() == '=' {
                         self.advance();
-                        self.add_token(TokenTypes::EQUAL_EQUAL);
+                        self.add_token(TokenTypes::EqualEqual);
                     } else {
-                        self.add_token(TokenTypes::EQUAL);
+                        self.add_token(TokenTypes::Equal);
                     }
                 }
 
@@ -121,9 +121,9 @@ impl Lexer {
                     self.advance();
                     if self.peek() == '=' {
                         self.advance();
-                        self.add_token(TokenTypes::LESS_EQUAL);
+                        self.add_token(TokenTypes::LessEqual);
                     } else {
-                        self.add_token(TokenTypes::LESS);
+                        self.add_token(TokenTypes::Less);
                     }
                 }
 
@@ -131,9 +131,9 @@ impl Lexer {
                     self.advance();
                     if self.peek() == '=' {
                         self.advance();
-                        self.add_token(TokenTypes::GREATER_EQUAL);
+                        self.add_token(TokenTypes::GreaterEqual);
                     } else {
-                        self.add_token(TokenTypes::GREATER);
+                        self.add_token(TokenTypes::Greater);
                     }
                 }
 
@@ -141,9 +141,9 @@ impl Lexer {
                     self.advance();
                     if self.peek() == '=' {
                         self.advance();
-                        self.add_token(TokenTypes::BANG_EQUAL);
+                        self.add_token(TokenTypes::BangEqual);
                     } else {
-                        self.add_token(TokenTypes::BANG);
+                        self.add_token(TokenTypes::Bang);
                     }
                 }
 
@@ -267,10 +267,8 @@ impl Lexer {
         let mut text = String::new();
         self.advance();
         while self.peek() != '"' && !self.is_at_end() {
-
             text.push(self.peek());
             self.advance();
-
         }
 
         if self.is_at_end() {
