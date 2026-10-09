@@ -1,4 +1,5 @@
-enum Ast {
+#[derive(Debug)]
+pub enum Ast {
     BinaryExpressions {
         left: Box<Ast>,
         right: Box<Ast>,
@@ -33,7 +34,7 @@ enum Ast {
 }
 
 #[derive(Debug)]
-enum Operator {
+pub enum Operator {
     Add,
     Subtract,
     Multiply,

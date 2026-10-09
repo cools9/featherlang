@@ -183,14 +183,15 @@ impl Lexer {
 
     fn number(&mut self) {
         let mut number = String::new();
+
         while self.is_number(self.peek()) {
             number.push(self.peek());
             self.advance();
         }
 
         if self.peek() == '.' && self.is_number(self.peek_next()) {
-            self.advance();
             number.push('.');
+            self.advance();
 
             while self.is_number(self.peek()) {
                 number.push(self.peek());
